@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#07145b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Safepark" />
+  
+  
+  
+  <style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#eef2f7;color:#0b164f}button,input,select{font:inherit}button{cursor:pointer}.screen{display:none;min-height:100vh}.screen.active{display:block}.auth-screen{background:linear-gradient(180deg,#07145b 0%,#0a176c 55%,#101f72 100%);padding:64px 22px 32px;color:#fff}.brand-wrap{text-align:center;margin:20px 0 38px}.brand-mark{width:72px;height:72px;border-radius:50%;margin:auto;display:grid;place-items:center;background:#38bd35;color:white;font-size:36px;font-weight:900;box-shadow:0 0 0 10px #38bd3522}.brand-name{font-size:30px;font-weight:950;letter-spacing:1px;margin-top:14px}.brand-name span,.logo-small span{color:#39c538}.tagline{color:#d9e1ff;margin-top:8px}.auth-card{background:#fff;color:#0b164f;border-radius:28px;padding:22px;box-shadow:0 28px 60px #0004;max-width:440px;margin:auto}.tabs{display:flex;background:#f1f4fa;border-radius:14px;padding:4px;margin-bottom:18px}.tab{flex:1;border:0;border-radius:11px;background:transparent;padding:11px;color:#65708f}.tab.active{background:#fff;color:#0b164f;box-shadow:0 2px 8px #0001;font-weight:800}.auth-form{display:none}.auth-form.active{display:block}label:not(.switch){display:block;font-size:13px;color:#66708b;margin:14px 0 6px}.auth-form input,.search-box input{width:100%;border:1px solid #dce2ec;border-radius:14px;padding:14px;outline:none}.auth-form input:focus,.search-box input:focus{border-color:#36b833;box-shadow:0 0 0 3px #36b83318}.primary,.secondary,.danger-btn{width:100%;border:0;border-radius:15px;padding:15px;font-weight:850;margin-top:14px}.primary{background:#36b832;color:#fff}.secondary{background:#eef8ed;color:#2c9e2b;border:1px solid #d6ecd5}.danger-btn{background:#fff0f0;color:#c93d3d;border:1px solid #ffd9d9}.auth-note{text-align:center;color:#b8c4f0;font-size:12px;margin-top:20px}.topbar{height:86px;padding:0 16px 14px;background:#07145b;color:#fff;display:flex;align-items:flex-end;justify-content:space-between;position:sticky;top:0;z-index:500}.logo-small{font-weight:950;letter-spacing:.5px}.round-icon{border:0;background:#ffffff12;color:#fff;border-radius:14px;width:44px;height:44px;position:relative}.badge{position:absolute;right:-5px;top:-5px;background:#ff4b4b;color:#fff;font-size:10px;border-radius:10px;padding:2px 5px}.view{display:none;min-height:calc(100vh - 150px);padding-bottom:92px}.view.active{display:block}.status-strip{height:38px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:12px;color:#68718b}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:5px}.dot.online{background:#32bd46}.map-tools{position:absolute;z-index:450;top:136px;right:10px;left:10px;display:flex;gap:7px;overflow:auto}.chip{white-space:nowrap;border:0;border-radius:20px;background:#fff;padding:9px 12px;box-shadow:0 2px 10px #0002;color:#263052}.chip.active{background:#eaf8ea;color:#239b29}#map{height:calc(100vh - 124px);min-height:560px;background:#dfe8da}.floating-card{position:absolute;z-index:460;bottom:92px;right:14px;left:14px;background:#fff;border-radius:22px;box-shadow:0 12px 34px #0003;padding:16px}.summary-head{display:flex;justify-content:space-between;align-items:center}.eyebrow{font-size:11px;color:#7d879e}.summary-head h3,.page-title h2{margin:3px 0 0}.status{padding:7px 11px;border-radius:18px;font-size:12px;font-weight:800}.status.ok{background:#e9f8eb;color:#23a136}.status.alert{background:#fff0e7;color:#e27216}.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);margin-top:14px;border-top:1px solid #edf0f5;border-bottom:1px solid #edf0f5}.metric-grid div{padding:11px 6px;text-align:center}.metric-grid span{display:block;color:#8a91a3;font-size:11px}.metric-grid strong{display:block;margin-top:4px}.quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:12px}.quick-actions button{border:0;background:#f4f7fa;border-radius:13px;padding:9px 4px;color:#162052}.quick-actions span{display:block;font-size:11px;margin-top:4px}.bottom-nav{position:fixed;z-index:600;right:0;left:0;bottom:0;height:76px;background:#fff;border-top:1px solid #e7eaf0;display:flex;justify-content:space-around;padding-bottom:max(6px,env(safe-area-inset-bottom))}.nav-item{flex:1;border:0;background:transparent;color:#7b849b;padding-top:7px;font-size:20px}.nav-item span{display:block;font-size:10px;margin-top:3px}.nav-item.active{color:#2eae32}.page-title{padding:22px 18px 12px;display:flex;justify-content:space-between;align-items:end}.small-primary{border:0;border-radius:12px;background:#36b832;color:#fff;padding:10px 13px;font-weight:800}.stack{padding:0 16px}.child-card,.park-card,.section-card,.profile-header-card{background:#fff;border-radius:18px;margin-bottom:12px;padding:16px;box-shadow:0 4px 18px #08133b0d}.child-card{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}.child-icon{width:48px;height:48px;border-radius:16px;background:#eaf7ea;display:grid;place-items:center;font-size:24px}.child-card small,.park-card small,.section-card small,.plan-card small{display:block;color:#838b9d;margin-top:4px}.battery-pill{font-size:12px;color:#219c2b;background:#ecf9ec;padding:7px 9px;border-radius:12px}.park-card{display:grid;grid-template-columns:1fr auto;gap:8px}.park-card button{grid-row:1/4;grid-column:2;border:0;border-radius:12px;background:#35b832;color:#fff;padding:0 15px}.park-card .distance{color:#6d7690}.search-box{padding:0 16px 14px}.filter-row{display:flex;gap:8px;padding:0 16px 14px}.timeline{padding:0 16px}.timeline-item{position:relative;background:#fff;border-radius:16px;margin-bottom:12px;padding:15px 15px 15px 42px}.timeline-item:before{content:"";position:absolute;left:18px;top:19px;width:10px;height:10px;border-radius:50%;background:#35b832}.timeline-item.alert:before{background:#f1872a}.timeline-item small{display:block;color:#8b91a0;margin-top:5px}.profile-header-card{margin:20px 16px 12px;display:flex;align-items:center;gap:14px}.avatar{width:60px;height:60px;border-radius:50%;background:#36b832;color:#fff;display:grid;place-items:center;font-size:28px;font-weight:900}.profile-header-card h2{margin:0 0 5px}.section-card{margin:12px 16px}.section-card h3{margin-top:0}.setting-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid #eef0f4}.setting-row:last-child{border-bottom:0}.setting-row select{border:1px solid #dce2ea;border-radius:12px;padding:8px}.switch{position:relative;width:48px;height:28px;flex:0 0 auto}.switch input{display:none}.switch span{position:absolute;inset:0;background:#ccd2de;border-radius:20px;transition:.2s}.switch span:after{content:"";position:absolute;width:22px;height:22px;border-radius:50%;background:#fff;top:3px;right:3px;transition:.2s}.switch input:checked+span{background:#37b936}.switch input:checked+span:after{right:23px}.plan-card{display:flex;justify-content:space-between;align-items:center;background:#f4faf3;border-radius:14px;padding:14px}.price{font-size:20px;font-weight:900;color:#2ba72d}.price small{font-size:10px;text-align:left}.overlay{display:none;position:fixed;inset:0;background:#0007;z-index:900}.overlay.show{display:block}.drawer{position:fixed;z-index:950;top:0;bottom:0;right:-84%;width:82%;max-width:340px;background:#fff;padding:20px;transition:.25s}.drawer.open{right:0}.drawer-head,.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.drawer-head small{color:#8b92a5}.close-btn{border:0;background:#f2f4f7;border-radius:12px;width:36px;height:36px}.drawer-item{width:100%;border:0;background:transparent;text-align:right;padding:14px 6px;border-bottom:1px solid #eef0f4;color:#17204e}.bottom-sheet{position:fixed;z-index:950;right:0;left:0;bottom:-100%;background:#fff;border-radius:24px 24px 0 0;padding:20px;max-height:75vh;overflow:auto;transition:.28s}.bottom-sheet.open{bottom:0}.notification-card{padding:14px;border-radius:14px;background:#f6f8fb;margin-bottom:10px}.notification-card.alert{background:#fff1e8}.notification-card small{display:block;color:#858da0;margin-top:5px}.big-device{font-size:62px;text-align:center;margin:8px 0 18px}.detail-row{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid #eef0f4}.green-text{color:#29a62c}.modal{display:none;position:fixed;z-index:970;inset:0;align-items:center;justify-content:center;padding:18px}.modal.open{display:flex}.modal-card{width:100%;max-width:420px;background:#fff;border-radius:22px;padding:20px}.modal-card input{width:100%;border:1px solid #dce2eb;border-radius:13px;padding:12px;margin-bottom:10px}.toast{position:fixed;z-index:1200;left:50%;bottom:95px;transform:translate(-50%,20px);background:#10172f;color:#fff;padding:11px 16px;border-radius:18px;opacity:0;pointer-events:none;transition:.2s;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis}.toast.show{opacity:1;transform:translate(-50%,0)}@media(min-width:700px){#app{max-width:430px;margin:0 auto;min-height:100vh;position:relative;box-shadow:0 0 60px #0002}.bottom-nav,.bottom-sheet{max-width:430px;margin:auto}.drawer{right:calc(50% - 215px - 84%)}.drawer.open{right:calc(50% - 215px)}.floating-card{max-width:402px;margin:auto}}
+
+.standalone-map{position:absolute;inset:0;background:linear-gradient(135deg,#d9eccb,#f4ead4 48%,#c8e5f0);overflow:hidden}
+.fake-road{position:absolute;background:#fff;border:3px solid #d2d7dd;border-radius:30px;opacity:.95}
+.road-a{width:120%;height:20px;left:-10%;top:48%;transform:rotate(-8deg)}
+.road-b{width:20px;height:100%;left:45%;top:0;transform:rotate(13deg)}
+.road-c{width:20px;height:90%;left:72%;top:5%;transform:rotate(-18deg)}
+.fake-park{position:absolute;background:#8bd17a55;border:2px dashed #63a45d;border-radius:22px;padding:18px;font-size:12px}
+.park-a{left:8%;top:20%;width:145px;height:115px}.park-b{right:8%;top:57%;width:135px;height:105px}
+.range-visual{position:absolute;width:220px;height:220px;border-radius:50%;border:3px solid #35b83255;background:#35b83210;left:calc(48% - 90px);top:calc(48% - 90px)}
+.map-pin{position:absolute;z-index:3;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;border:4px solid white;box-shadow:0 4px 12px #0004;display:grid;place-items:center;font-weight:900;color:white}
+.parent-pin{background:#1768d8;font-size:11px}.child-pin{background:#31b94b}.child-pin.warn{background:#f28a27}
+
+
+/* SAFEPARK BLACK & GOLD THEME */
+:root{--sp-black:#090909;--sp-black2:#151515;--sp-gold:#D4AF37;--sp-gold2:#F0D477;--sp-cream:#FFF8E7}
+html,body{background:#0b0b0b;color:#f5f1e7}
+.auth-screen{background:radial-gradient(circle at 50% 15%,#29220d 0%,#111 28%,#050505 72%);color:#fff}
+.brand-mark{background:linear-gradient(145deg,#f0d477,#b98c19);color:#090909;box-shadow:0 0 0 9px #d4af3720,0 10px 35px #000}
+.brand-name,.logo-small{color:#fff;letter-spacing:1.5px}
+.brand-name span,.logo-small span{color:var(--sp-gold)}
+.tagline,.auth-note{color:#d9c98e}
+.auth-card{background:#111;color:#fff;border:1px solid #d4af3745;box-shadow:0 28px 70px #0008}
+.tabs{background:#080808}.tab{color:#a7a7a7}.tab.active{background:#211c0e;color:var(--sp-gold);box-shadow:none}
+label:not(.switch){color:#c8bb8a}
+.auth-form input,.search-box input{background:#0b0b0b;color:#fff;border-color:#40371c}
+.auth-form input:focus,.search-box input:focus{border-color:var(--sp-gold);box-shadow:0 0 0 3px #d4af371c}
+.primary,.small-primary{background:linear-gradient(135deg,#f0d477,#b98c19);color:#080808}
+.secondary{background:#17140b;color:var(--sp-gold);border-color:#5c4b18}
+.topbar{background:linear-gradient(90deg,#050505,#17130a,#050505);border-bottom:1px solid #d4af3745}
+.round-icon{background:#d4af3715;color:var(--sp-gold);border:1px solid #d4af3730}
+.status-strip{background:#101010;color:#c9c1a7;border-bottom:1px solid #2c281d}
+.dot.online{background:var(--sp-gold)}
+.chip{background:#111;color:#d9d3c2;border:1px solid #332d1b;box-shadow:0 2px 10px #0005}
+.chip.active{background:#2b230d;color:var(--sp-gold);border-color:#6e5818}
+.floating-card,.child-card,.park-card,.section-card,.profile-header-card,.timeline-item{background:#111;color:#f5f1e7;border:1px solid #302a1a;box-shadow:0 8px 24px #0004}
+.eyebrow,.metric-grid span,.child-card small,.park-card small,.section-card small,.plan-card small,.timeline-item small{color:#a9a18b}
+.status.ok{background:#2a230e;color:var(--sp-gold)}.status.alert{background:#32180d;color:#f1ad6d}
+.metric-grid{border-color:#332d1d}.quick-actions button{background:#1c190f;color:var(--sp-gold);border:1px solid #3d341c}
+.bottom-nav{background:#080808;border-top:1px solid #332b17}.nav-item{color:#827b69}.nav-item.active{color:var(--sp-gold)}
+.page-title{background:#0b0b0b}.child-icon{background:#2b230e;color:var(--sp-gold)}.battery-pill{background:#2a230e;color:var(--sp-gold)}
+.park-card button{background:linear-gradient(135deg,#f0d477,#b98c19);color:#080808}
+.avatar{background:linear-gradient(135deg,#f0d477,#a77d13);color:#090909}
+.setting-row{border-color:#2b281f}.setting-row select{background:#090909;color:var(--sp-gold);border-color:#51441e}
+.switch span{background:#393939}.switch input:checked+span{background:var(--sp-gold)}
+.plan-card{background:#211c0e}.price{color:var(--sp-gold)}
+.drawer,.bottom-sheet,.modal-card{background:#0d0d0d;color:#f5f1e7;border:1px solid #3d331b}
+.drawer-item{color:#e9e1cb;border-color:#29251b}.close-btn{background:#211c0e;color:var(--sp-gold)}
+.notification-card{background:#171717}.notification-card.alert{background:#2c180e}.detail-row{border-color:#2a271f}.green-text{color:var(--sp-gold)}
+.toast{background:#d4af37;color:#080808;font-weight:800}
+.standalone-map{background:linear-gradient(135deg,#2b2a24,#47402a 48%,#242424)}
+.fake-road{background:#b9ad83;border-color:#6d6449}.fake-park{background:#d4af3722;border-color:#d4af37;color:#f6e9b4}
+.range-visual{border-color:#d4af3780;background:#d4af3710}.parent-pin{background:#0b0b0b;color:#d4af37;border-color:#d4af37}.child-pin{background:#d4af37;color:#090909;border-color:#fff4c4}.child-pin.warn{background:#b96d22;color:#fff}
+
+</style>
+  <title>Safepark</title>
+</head>
+<body>
+<div id="app">
+
+  <section id="authScreen" class="screen active auth-screen">
+    <div class="brand-wrap">
+      <div class="brand-mark">SP</div>
+      <div class="brand-name">SAFE<span>PARK</span></div>
+      <div class="tagline">הילדים משחקים. אתם רגועים.</div>
+    </div>
+
+    <div class="auth-card">
+      <div class="tabs">
+        <button class="tab active" data-auth-tab="login">התחברות</button>
+        <button class="tab" data-auth-tab="register">הרשמה</button>
+      </div>
+
+      <div id="loginForm" class="auth-form active">
+        <label>אימייל</label>
+        <input id="loginEmail" type="email" placeholder="name@example.com" value="demo@safepark.co.il">
+        <label>סיסמה</label>
+        <input id="loginPassword" type="password" placeholder="••••••••" value="123456">
+        <button class="primary" id="loginBtn">כניסה</button>
+        <button class="secondary" id="guestBtn">המשך כדמו</button>
+      </div>
+
+      <div id="registerForm" class="auth-form">
+        <label>שם מלא</label>
+        <input id="regName" placeholder="ישראל ישראלי">
+        <label>טלפון</label>
+        <input id="regPhone" inputmode="tel" placeholder="05X-XXXXXXX">
+        <label>אימייל</label>
+        <input id="regEmail" type="email" placeholder="name@example.com">
+        <label>סיסמה</label>
+        <input id="regPassword" type="password" placeholder="6 תווים לפחות">
+        <button class="primary" id="registerBtn">יצירת חשבון</button>
+      </div>
+    </div>
+    <div class="auth-note">גרסת PWA מלאה לדמו וחיבור עתידי לחומרת Safepark</div>
+  </section>
+
+  <section id="mainApp" class="screen">
+    <header class="topbar">
+      <button class="round-icon" id="menuBtn">☰</button>
+      <div class="logo-small">SAFE<span>PARK</span></div>
+      <button class="round-icon notification-button" id="notificationsBtn">🔔<span id="notifBadge" class="badge">2</span></button>
+    </header>
+
+    <main>
+      <section id="homeView" class="view active">
+        <div class="status-strip">
+          <div><span class="dot online"></span> מערכת פעילה</div>
+          <div id="lastSync">סנכרון: עכשיו</div>
+        </div>
+
+        <div class="map-tools">
+          <button class="chip active">כל הילדים</button>
+          <button class="chip">טווח 150 מ׳</button>
+          <button class="chip" id="centerMapBtn">מרכז אותי</button>
+        </div>
+
+        <div id="map"></div>
+
+        <div class="floating-card child-summary">
+          <div class="summary-head">
+            <div>
+              <div class="eyebrow">ילד נבחר</div>
+              <h3 id="selectedChildName">תאיר</h3>
+            </div>
+            <span id="selectedStatus" class="status ok">בטוח</span>
+          </div>
+          <div class="metric-grid">
+            <div><span>מרחק</span><strong id="distanceValue">42 מ׳</strong></div>
+            <div><span>סוללה</span><strong id="batteryValue">86%</strong></div>
+            <div><span>צמיד</span><strong id="braceletValue">SP-1042</strong></div>
+          </div>
+          <div class="quick-actions">
+            <button data-action="ring">🔊<span>צליל</span></button>
+            <button data-action="talk">🎙️<span>דבר</span></button>
+            <button data-action="safezone">◎<span>טווח</span></button>
+            <button data-action="details">⌚<span>פרטים</span></button>
+          </div>
+        </div>
+      </section>
+
+      <section id="childrenView" class="view">
+        <div class="page-title">
+          <div><div class="eyebrow">משפחה</div><h2>הילדים והצמידים</h2></div>
+          <button class="small-primary" id="addChildBtn">+ הוסף</button>
+        </div>
+        <div id="childrenList" class="stack"></div>
+      </section>
+
+      <section id="parksView" class="view">
+        <div class="page-title">
+          <div><div class="eyebrow">Safepark</div><h2>פארקים קרובים</h2></div>
+        </div>
+        <div class="search-box"><input id="parkSearch" placeholder="חיפוש פארק או עיר"></div>
+        <div id="parksList" class="stack"></div>
+      </section>
+
+      <section id="historyView" class="view">
+        <div class="page-title"><div><div class="eyebrow">בטיחות</div><h2>היסטוריית אירועים</h2></div></div>
+        <div class="filter-row">
+          <button class="chip active" data-history-filter="all">הכול</button>
+          <button class="chip" data-history-filter="alert">התראות</button>
+          <button class="chip" data-history-filter="info">מידע</button>
+        </div>
+        <div id="historyList" class="timeline"></div>
+      </section>
+
+      <section id="profileView" class="view">
+        <div class="profile-header-card">
+          <div class="avatar">א</div>
+          <div><h2 id="profileName">אריאל</h2><div id="profileEmail">demo@safepark.co.il</div></div>
+        </div>
+
+        <div class="section-card">
+          <h3>הגדרות בטיחות</h3>
+          <div class="setting-row">
+            <div><strong>טווח ברירת מחדל</strong><small>התראה כאשר ילד עובר את הגבול</small></div>
+            <select id="rangeSelect"><option value="100">100 מ׳</option><option value="150" selected>150 מ׳</option><option value="200">200 מ׳</option><option value="300">300 מ׳</option></select>
+          </div>
+          <div class="setting-row">
+            <div><strong>התראת פתיחת צמיד</strong><small>התראה אם הצמיד נפתח או מוסר</small></div>
+            <label class="switch"><input id="tamperToggle" type="checkbox" checked><span></span></label>
+          </div>
+          <div class="setting-row">
+            <div><strong>התראות קוליות</strong><small>צליל חזק באירוע בטיחות</small></div>
+            <label class="switch"><input id="soundToggle" type="checkbox" checked><span></span></label>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <h3>מנוי</h3>
+          <div class="plan-card">
+            <div><strong>Safepark Family</strong><small>עד 4 צמידים</small></div>
+            <div class="price">39 ₪<small>/חודש</small></div>
+          </div>
+          <button class="secondary" id="managePlanBtn">ניהול מנוי</button>
+        </div>
+
+        <button class="danger-btn" id="logoutBtn">התנתקות</button>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-view="homeView">🗺️<span>מפה</span></button>
+      <button class="nav-item" data-view="childrenView">⌚<span>צמידים</span></button>
+      <button class="nav-item" data-view="parksView">🌳<span>פארקים</span></button>
+      <button class="nav-item" data-view="historyView">🔔<span>אירועים</span></button>
+      <button class="nav-item" data-view="profileView">👤<span>פרופיל</span></button>
+    </nav>
+  </section>
+
+  <div id="overlay" class="overlay"></div>
+
+  <aside id="drawer" class="drawer">
+    <div class="drawer-head">
+      <div><div class="logo-small">SAFE<span>PARK</span></div><small>מרכז בטיחות משפחתי</small></div>
+      <button class="close-btn" data-close>✕</button>
+    </div>
+    <button class="drawer-item" data-drawer-view="homeView">🗺️ מפה</button>
+    <button class="drawer-item" data-drawer-view="childrenView">⌚ הילדים שלי</button>
+    <button class="drawer-item" data-drawer-view="parksView">🌳 פארקים</button>
+    <button class="drawer-item" id="simulateExitBtn">⚠️ הדגם יציאה מהטווח</button>
+    <button class="drawer-item" id="simulateTamperBtn">🔓 הדגם פתיחת צמיד</button>
+  </aside>
+
+  <aside id="notificationsPanel" class="bottom-sheet">
+    <div class="sheet-head"><h3>התראות</h3><button class="close-btn" data-close>✕</button></div>
+    <div id="notificationsList"></div>
+  </aside>
+
+  <aside id="childSheet" class="bottom-sheet">
+    <div class="sheet-head"><h3>פרטי צמיד</h3><button class="close-btn" data-close>✕</button></div>
+    <div class="sheet-body">
+      <div class="big-device">⌚</div>
+      <div class="detail-row"><span>שם</span><strong id="sheetChildName">תאיר</strong></div>
+      <div class="detail-row"><span>מספר צמיד</span><strong id="sheetBraceletId">SP-1042</strong></div>
+      <div class="detail-row"><span>סוללה</span><strong id="sheetBattery">86%</strong></div>
+      <div class="detail-row"><span>סטטוס</span><strong class="green-text">מחובר</strong></div>
+      <button class="primary" id="ringFromSheet">הפעל צליל בצמיד</button>
+    </div>
+  </aside>
+
+  <div id="modal" class="modal">
+    <div class="modal-card">
+      <div class="sheet-head"><h3 id="modalTitle">הוסף ילד</h3><button class="close-btn" data-close>✕</button></div>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+</div>
+
+
+<script>
+const state = {
+  user: JSON.parse(localStorage.getItem("safepark_user") || "null"),
+  selectedChildId: 1,
+  range: Number(localStorage.getItem("safepark_range") || 150),
+  children: JSON.parse(localStorage.getItem("safepark_children") || "null") || [
+    {id:1,name:"תאיר",bracelet:"SP-1042",battery:86,status:"safe",distance:42,lat:32.0879,lng:34.8878},
+    {id:2,name:"תהל",bracelet:"SP-1043",battery:74,status:"safe",distance:68,lat:32.0869,lng:34.8903},
+    {id:3,name:"אורח",bracelet:"SP-1091",battery:61,status:"safe",distance:103,lat:32.0893,lng:34.8848}
+  ],
+  parks: [
+    {name:"הפארק הגדול פתח תקווה",city:"פתח תקווה",distance:"0.8 ק״מ",status:"פתוח",lat:32.0877,lng:34.8879},
+    {name:"גן העצמאות",city:"פתח תקווה",distance:"1.4 ק״מ",status:"פתוח",lat:32.0922,lng:34.8811},
+    {name:"פארק שכונתי אם המושבות",city:"פתח תקווה",distance:"2.1 ק״מ",status:"פתוח",lat:32.098,lng:34.884}
+  ],
+  events: JSON.parse(localStorage.getItem("safepark_events") || "null") || [
+    {type:"alert",title:"תאיר יצאה מטווח הבטיחות",detail:"168 מטר מההורה",time:"היום, 18:42"},
+    {type:"info",title:"צמיד תהל חובר בהצלחה",detail:"SP-1043",time:"היום, 18:31"},
+    {type:"info",title:"כניסה לפארק Safepark",detail:"הפארק הגדול פתח תקווה",time:"היום, 18:25"}
+  ]
+};
+
+let map, parentMarker, childMarkers = {}, rangeCircle;
+const parentLocation = {lat:32.0875,lng:34.8887};
+
+function $(id){return document.getElementById(id)}
+function save(){
+  localStorage.setItem("safepark_children", JSON.stringify(state.children));
+  localStorage.setItem("safepark_events", JSON.stringify(state.events));
+  localStorage.setItem("safepark_range", String(state.range));
+}
+function toast(msg){
+  const t=$("toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(window.__toast); window.__toast=setTimeout(()=>t.classList.remove("show"),1800);
+}
+function closeAll(){
+  $("overlay").classList.remove("show");
+  document.querySelectorAll(".drawer,.bottom-sheet,.modal").forEach(x=>x.classList.remove("open"));
+}
+function openPanel(id){
+  closeAll(); $("overlay").classList.add("show"); $(id).classList.add("open");
+}
+function showView(id){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  $(id).classList.add("active");
+  document.querySelectorAll(".nav-item").forEach(n=>n.classList.toggle("active",n.dataset.view===id));
+  closeAll();
+  
+}
+function login(user){
+  state.user = user || {name:"אריאל",email:"demo@safepark.co.il"};
+  localStorage.setItem("safepark_user", JSON.stringify(state.user));
+  $("authScreen").classList.remove("active"); $("mainApp").classList.add("active");
+  $("profileName").textContent=state.user.name || "משתמש";
+  $("profileEmail").textContent=state.user.email || "";
+  initApp();
+}
+function logout(){
+  localStorage.removeItem("safepark_user");
+  state.user=null;
+  $("mainApp").classList.remove("active"); $("authScreen").classList.add("active");
+}
+function initMap(){
+  const el=$("map");
+  if(el.dataset.ready) return;
+  el.dataset.ready="1";
+  el.innerHTML=`<div class="standalone-map">
+    <div class="fake-road road-a"></div><div class="fake-road road-b"></div><div class="fake-road road-c"></div>
+    <div class="fake-park park-a">הפארק הגדול</div><div class="fake-park park-b">גן משחקים</div>
+    <div id="rangeVisual" class="range-visual"></div>
+    <div class="map-pin parent-pin" style="left:48%;top:48%">אני</div>
+    <div id="mapChildren"></div>
+  </div>`;
+  renderMapChildren();
+}
+function renderMapChildren(){
+  const holder=$("mapChildren"); if(!holder)return;
+  const positions=[["38%","38%"],["62%","58%"],["25%","67%"],["70%","32%"]];
+  holder.innerHTML=state.children.map((c,i)=>{
+    const p=positions[i%positions.length];
+    return `<button class="map-pin child-pin ${c.status==="alert"?"warn":""}" data-map-child="${c.id}" style="left:${p[0]};top:${p[1]}">${c.name[0]}</button>`;
+  }).join("");
+  document.querySelectorAll("[data-map-child]").forEach(b=>b.onclick=()=>selectChild(Number(b.dataset.mapChild)));
+}
+function selectChild(id){
+  state.selectedChildId=id;
+  const c=state.children.find(x=>x.id===id); if(!c)return;
+  $("selectedChildName").textContent=c.name;
+  $("distanceValue").textContent=c.distance+" מ׳";
+  $("batteryValue").textContent=c.battery+"%";
+  $("braceletValue").textContent=c.bracelet;
+  $("selectedStatus").textContent=c.status==="alert"?"מחוץ לטווח":"בטוח";
+  $("selectedStatus").className="status "+(c.status==="alert"?"alert":"ok");
+}
+function renderChildren(){
+  $("childrenList").innerHTML=state.children.map(c=>`
+    <div class="child-card" data-child="${c.id}">
+      <div class="child-icon">⌚</div>
+      <div><strong>${c.name}</strong><small>${c.bracelet} · ${c.status==="alert"?"התראה":"מחובר"}</small></div>
+      <div class="battery-pill">${c.battery}%</div>
+    </div>`).join("");
+  document.querySelectorAll("[data-child]").forEach(el=>el.onclick=()=>{selectChild(Number(el.dataset.child));showView("homeView")});
+}
+function renderParks(filter=""){
+  const q=filter.trim();
+  const list=state.parks.filter(p=>!q || (p.name+p.city).includes(q));
+  $("parksList").innerHTML=list.map((p,i)=>`
+    <div class="park-card">
+      <div><strong>${p.name}</strong><small>${p.city} · ${p.status}</small><div class="distance">${p.distance}</div></div>
+      <button data-park="${i}">נווט</button>
+    </div>`).join("");
+  document.querySelectorAll("[data-park]").forEach(b=>b.onclick=()=>toast("ניווט נפתח"));
+}
+function renderHistory(filter="all"){
+  const list=state.events.filter(e=>filter==="all"||e.type===filter);
+  $("historyList").innerHTML=list.map(e=>`<div class="timeline-item ${e.type}"><strong>${e.title}</strong><small>${e.detail}</small><small>${e.time}</small></div>`).join("");
+}
+function renderNotifications(){
+  const alerts=state.events.slice(0,5);
+  $("notificationsList").innerHTML=alerts.map(e=>`<div class="notification-card ${e.type}"><strong>${e.title}</strong><small>${e.detail} · ${e.time}</small></div>`).join("");
+  $("notifBadge").textContent=String(state.events.filter(e=>e.type==="alert").length);
+}
+function addEvent(type,title,detail){
+  state.events.unshift({type,title,detail,time:"עכשיו"}); save(); renderHistory(); renderNotifications();
+}
+function simulateExit(){
+  const c=state.children.find(x=>x.id===state.selectedChildId);
+  c.status="alert"; c.distance=state.range+18; c.lat+=.0020; c.lng+=.0014;
+  addEvent("alert",`${c.name} יצאה מטווח הבטיחות`,`${c.distance} מטר מההורה`);
+  save(); renderMapChildren(); selectChild(c.id); renderChildren(); closeAll();
+  toast(`⚠️ ${c.name} מחוץ לטווח`);
+  if(navigator.vibrate) navigator.vibrate([250,120,250]);
+}
+function simulateTamper(){
+  const c=state.children.find(x=>x.id===state.selectedChildId);
+  addEvent("alert",`הצמיד של ${c.name} נפתח`,`זוהתה פתיחת סוגר בצמיד ${c.bracelet}`);
+  closeAll(); toast("⚠️ התראת פתיחת צמיד");
+  if(navigator.vibrate) navigator.vibrate([300,100,300]);
+}
+function openChildDetails(){
+  const c=state.children.find(x=>x.id===state.selectedChildId);
+  $("sheetChildName").textContent=c.name; $("sheetBraceletId").textContent=c.bracelet; $("sheetBattery").textContent=c.battery+"%";
+  openPanel("childSheet");
+}
+function openAddChild(){
+  $("modalTitle").textContent="הוסף ילד וצמיד";
+  $("modalContent").innerHTML=`<input id="newChildName" placeholder="שם הילד"><input id="newBraceletId" placeholder="מספר צמיד, לדוגמה SP-1050"><button class="primary" id="saveChildBtn">שמור וחבר</button>`;
+  openPanel("modal");
+  $("saveChildBtn").onclick=()=>{
+    const name=$("newChildName").value.trim(), bracelet=$("newBraceletId").value.trim();
+    if(!name||!bracelet){toast("יש למלא שם ומספר צמיד");return}
+    const id=Math.max(...state.children.map(c=>c.id))+1;
+    state.children.push({id,name,bracelet,battery:100,status:"safe",distance:25,lat:parentLocation.lat+.0006*Math.random(),lng:parentLocation.lng+.0006*Math.random()});
+    save();renderChildren();renderMapChildren();closeAll();toast("הצמיד חובר בהצלחה");
+  }
+}
+function initApp(){
+  initMap(); renderChildren(); renderParks(); renderHistory(); renderNotifications(); selectChild(state.selectedChildId);
+  $("rangeSelect").value=String(state.range);
+}
+
+document.querySelectorAll("[data-auth-tab]").forEach(tab=>tab.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));tab.classList.add("active");
+  $("loginForm").classList.toggle("active",tab.dataset.authTab==="login");
+  $("registerForm").classList.toggle("active",tab.dataset.authTab==="register");
+});
+$("loginBtn").onclick=()=>login({name:"אריאל",email:$("loginEmail").value||"demo@safepark.co.il"});
+$("guestBtn").onclick=()=>login({name:"אריאל",email:"demo@safepark.co.il"});
+$("registerBtn").onclick=()=>{
+  const name=$("regName").value.trim(), email=$("regEmail").value.trim(), pass=$("regPassword").value;
+  if(!name||!email||pass.length<6){toast("בדוק את פרטי ההרשמה");return}
+  login({name,email});
+};
+document.querySelectorAll(".nav-item").forEach(n=>n.onclick=()=>showView(n.dataset.view));
+$("menuBtn").onclick=()=>openPanel("drawer");
+$("notificationsBtn").onclick=()=>{renderNotifications();openPanel("notificationsPanel")};
+$("overlay").onclick=closeAll;
+document.querySelectorAll("[data-close]").forEach(b=>b.onclick=closeAll);
+document.querySelectorAll("[data-drawer-view]").forEach(b=>b.onclick=()=>showView(b.dataset.drawerView));
+$("simulateExitBtn").onclick=simulateExit;
+$("simulateTamperBtn").onclick=simulateTamper;
+$("centerMapBtn").onclick=()=>toast("המפה ממורכזת עליך");
+document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>{
+  const a=b.dataset.action;
+  if(a==="ring") toast("🔊 צליל נשלח לצמיד");
+  if(a==="talk") toast("🎙️ ערוץ דיבור נפתח (דמו)");
+  if(a==="safezone") { state.range=state.range===150?200:150;  $("rangeSelect").value=state.range; save(); toast(`טווח הוגדר ל-${state.range} מ׳`);}
+  if(a==="details") openChildDetails();
+});
+$("ringFromSheet").onclick=()=>toast("🔊 צליל נשלח לצמיד");
+$("addChildBtn").onclick=openAddChild;
+$("parkSearch").oninput=e=>renderParks(e.target.value);
+document.querySelectorAll("[data-history-filter]").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("[data-history-filter]").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderHistory(b.dataset.historyFilter);
+});
+$("rangeSelect").onchange=e=>{state.range=Number(e.target.value);save();toast("טווח הבטיחות נשמר")};
+$("tamperToggle").onchange=()=>toast("הגדרת פתיחת צמיד עודכנה");
+$("soundToggle").onchange=()=>toast("הגדרת קול עודכנה");
+$("managePlanBtn").onclick=()=>toast("מסך תשלום יחובר לספק סליקה");
+$("logoutBtn").onclick=logout;
+
+
+if(state.user) login(state.user);
+
+</script>
+</body>
+</html>
