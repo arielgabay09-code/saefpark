@@ -114,6 +114,7 @@ body{background:#050505}
 <meta name="apple-mobile-web-app-title" content="Safepark">
 <meta name="application-name" content="Safepark">
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div id="app">
@@ -164,7 +165,7 @@ body{background:#050505}
 
     <main>
       <section id="homeView" class="view active">
-        <div class="status-strip">
+        <div class="status-strip"><div style="position:absolute;left:50%;transform:translateX(-50%);font-size:10px;color:#d4af37">● שרת Safepark מחובר</div>
           <div><span class="dot online"></span> מערכת פעילה</div>
           <div id="lastSync">סנכרון: עכשיו</div>
         </div>
@@ -339,7 +340,86 @@ function safeJSON(key, fallback){
   }
 }
 
+
+const SUPABASE_URL = "https://mkooufljbrvcmrqimahe.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_c6jfMaXbRcoJ_N5gF-mNGQ_amvUhsj-";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+async function serverRegister(name, phone, email, password) {
+  const { data, error } = await supabaseClient.auth.signUp({
+    email,
+    password,
+    options: { data: { full_name: name, phone: phone || "" } }
+  });
+  if (error) throw error;
+  return data;
+}
+
+async function serverLogin(email, password) {
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if (error) throw error;
+  return data;
+}
+
+async function serverLogout() {
+  try { await supabaseClient.auth.signOut(); } catch(e) {}
+}
+
+async function getServerSession() {
+  const { data } = await supabaseClient.auth.getSession();
+  return data?.session || null;
+}
+
+async function fetchServerProfile(userId) {
+  const { data, error } = await supabaseClient.from("profiles")
+    .select("id,full_name,phone,role,created_at")
+    .eq("id", userId)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+async function fetchServerChildren() {
+  const { data, error } = await supabaseClient.from("children")
+    .select("id,name,birth_year,created_at")
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return data || [];
+}
+
+async function insertServerChild(name) {
+  const { data: authData } = await supabaseClient.auth.getUser();
+  const uid = authData?.user?.id;
+  if (!uid) throw new Error("אין משתמש מחובר");
+  const { data, error } = await supabaseClient.from("children")
+    .insert({ parent_id: uid, name })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+async function fetchServerSubscription() {
+  const { data, error } = await supabaseClient.from("subscriptions")
+    .select("plan_code,status,amount_ils,current_period_end")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+async function fetchServerAlerts() {
+  const { data, error } = await supabaseClient.from("alerts")
+    .select("id,type,severity,message,distance_meters,created_at")
+    .order("created_at", { ascending: false })
+    .limit(20);
+  if (error) throw error;
+  return data || [];
+}
+
 const state = {
+  serverSession: null,
   user: safeJSON("safepark_user", null),
   selectedChildId: 1,
   range: Number(safeGet("safepark_range", "150")) || 150,
@@ -388,17 +468,22 @@ function showView(id){
   
 }
 function login(user){
-  state.user = user || {name:"אריאל",email:"demo@safepark.co.il"};
+  state.user = user || {name:"משתמש",email:""};
   safeSet("safepark_user", JSON.stringify(state.user));
-  $("authScreen").classList.remove("active"); $("mainApp").classList.add("active");
+  $("authScreen").classList.remove("active");
+  $("mainApp").classList.add("active");
   $("profileName").textContent=state.user.name || "משתמש";
   $("profileEmail").textContent=state.user.email || "";
   initApp();
 }
-function logout(){
+async function logout(){
+  await serverLogout();
   safeRemove("safepark_user");
   state.user=null;
-  $("mainApp").classList.remove("active"); $("authScreen").classList.add("active");
+  state.serverSession=null;
+  $("mainApp").classList.remove("active");
+  $("authScreen").classList.add("active");
+  toast("התנתקת בהצלחה");
 }
 function initMap(){
   const el=$("map");
@@ -486,14 +571,84 @@ function openAddChild(){
   $("modalTitle").textContent="הוסף ילד וצמיד";
   $("modalContent").innerHTML=`<input id="newChildName" placeholder="שם הילד"><input id="newBraceletId" placeholder="מספר צמיד, לדוגמה SP-1050"><button class="primary" id="saveChildBtn">שמור וחבר</button>`;
   openPanel("modal");
-  $("saveChildBtn").onclick=()=>{
+  $("saveChildBtn").onclick=async()=>{
     const name=$("newChildName").value.trim(), bracelet=$("newBraceletId").value.trim();
     if(!name||!bracelet){toast("יש למלא שם ומספר צמיד");return}
-    const id=Math.max(...state.children.map(c=>c.id))+1;
-    state.children.push({id,name,bracelet,battery:100,status:"safe",distance:25,lat:parentLocation.lat+.0006*Math.random(),lng:parentLocation.lng+.0006*Math.random()});
-    save();renderChildren();renderMapChildren();closeAll();toast("הצמיד חובר בהצלחה");
+    if(state.serverSession){
+      try{
+        const row=await insertServerChild(name);
+        state.children.push({id:row.id,name:row.name,bracelet:bracelet,battery:100,status:"safe",distance:25,lat:parentLocation.lat+.0006*Math.random(),lng:parentLocation.lng+.0006*Math.random()});
+        renderChildren();renderMapChildren();closeAll();toast("הילד נשמר בשרת");
+      }catch(e){toast("שגיאה בשמירה לשרת: "+e.message)}
+    }else{
+      const id=Date.now();
+      state.children.push({id,name,bracelet,battery:100,status:"safe",distance:25,lat:parentLocation.lat+.0006*Math.random(),lng:parentLocation.lng+.0006*Math.random()});
+      save();renderChildren();renderMapChildren();closeAll();toast("נשמר מקומית במצב דמו");
+    }
   }
 }
+
+async function syncFromServer(){
+  const session = await getServerSession();
+  state.serverSession = session;
+  if(!session) return;
+
+  try{
+    const profile=await fetchServerProfile(session.user.id);
+    state.user={
+      name:profile?.full_name || session.user.user_metadata?.full_name || session.user.email?.split("@")[0] || "משתמש",
+      email:session.user.email || ""
+    };
+    safeSet("safepark_user",JSON.stringify(state.user));
+    $("profileName").textContent=state.user.name;
+    $("profileEmail").textContent=state.user.email;
+  }catch(e){}
+
+  try{
+    const kids=await fetchServerChildren();
+    if(kids.length){
+      state.children=kids.map((k,i)=>({
+        id:k.id,
+        name:k.name,
+        bracelet:"לא שויך",
+        battery:100,
+        status:"safe",
+        distance:0,
+        lat:parentLocation.lat+(i+1)*0.0005,
+        lng:parentLocation.lng+(i+1)*0.0004
+      }));
+      state.selectedChildId=state.children[0].id;
+      renderChildren();
+      renderMapChildren();
+      selectChild(state.selectedChildId);
+    }
+  }catch(e){ console.warn("children sync",e); }
+
+  try{
+    const alerts=await fetchServerAlerts();
+    if(alerts.length){
+      state.events=alerts.map(a=>({
+        type:a.severity==="critical"||a.severity==="warning"?"alert":"info",
+        title:a.message || a.type,
+        detail:a.distance_meters?`${a.distance_meters} מטר`:"",
+        time:new Date(a.created_at).toLocaleString("he-IL")
+      }));
+      renderHistory();
+      renderNotifications();
+    }
+  }catch(e){}
+
+  try{
+    const sub=await fetchServerSubscription();
+    if(sub){
+      const plan=document.querySelector(".plan-card strong");
+      const price=document.querySelector(".plan-card .price");
+      if(plan) plan.textContent=sub.plan_code==="family_6"?"Safepark Family 6":sub.plan_code==="family_4"?"Safepark Family 4":"Safepark";
+      if(price) price.innerHTML=`${Number(sub.amount_ils||0)} ₪<small>/חודש</small>`;
+    }
+  }catch(e){}
+}
+
 function initApp(){
   initMap(); renderChildren(); renderParks(); renderHistory(); renderNotifications(); selectChild(state.selectedChildId);
   $("rangeSelect").value=String(state.range);
@@ -504,12 +659,51 @@ document.querySelectorAll("[data-auth-tab]").forEach(tab=>tab.onclick=()=>{
   $("loginForm").classList.toggle("active",tab.dataset.authTab==="login");
   $("registerForm").classList.toggle("active",tab.dataset.authTab==="register");
 });
-$("loginBtn").onclick=()=>login({name:"אריאל",email:$("loginEmail").value||"demo@safepark.co.il"});
-$("guestBtn").onclick=()=>login({name:"אריאל",email:"demo@safepark.co.il"});
-$("registerBtn").onclick=()=>{
-  const name=$("regName").value.trim(), email=$("regEmail").value.trim(), pass=$("regPassword").value;
-  if(!name||!email||pass.length<6){toast("בדוק את פרטי ההרשמה");return}
-  login({name,email});
+$("loginBtn").onclick=async()=>{
+  const email=$("loginEmail").value.trim();
+  const password=$("loginPassword").value;
+  if(!email||!password){toast("יש להזין אימייל וסיסמה");return}
+  $("loginBtn").disabled=true; $("loginBtn").textContent="מתחבר...";
+  try{
+    const data=await serverLogin(email,password);
+    state.serverSession=data.session;
+    let profile=null;
+    try{ profile=await fetchServerProfile(data.user.id); }catch(e){}
+    login({name:profile?.full_name || data.user.user_metadata?.full_name || email.split("@")[0],email:data.user.email});
+    await syncFromServer();
+    toast("התחברת בהצלחה");
+  }catch(e){
+    toast(e.message==="Invalid login credentials"?"אימייל או סיסמה שגויים":("שגיאת התחברות: "+e.message));
+  }finally{
+    $("loginBtn").disabled=false; $("loginBtn").textContent="כניסה";
+  }
+};
+$("guestBtn").onclick=()=>{ login({name:"אורח",email:"מצב דמו מקומי"}); toast("מצב אורח – הנתונים לא נשמרים בשרת"); };
+$("registerBtn").onclick=async()=>{
+  const name=$("regName").value.trim();
+  const phone=$("regPhone").value.trim();
+  const email=$("regEmail").value.trim();
+  const pass=$("regPassword").value;
+  if(!name||!email||pass.length<6){toast("מלא שם, אימייל וסיסמה של 6 תווים לפחות");return}
+  $("registerBtn").disabled=true; $("registerBtn").textContent="יוצר חשבון...";
+  try{
+    const data=await serverRegister(name,phone,email,pass);
+    if(data.session){
+      state.serverSession=data.session;
+      login({name,email});
+      await syncFromServer();
+      toast("החשבון נוצר ונכנסת בהצלחה");
+    } else {
+      toast("החשבון נוצר. בדוק את האימייל לאישור החשבון");
+      document.querySelector('[data-auth-tab="login"]').click();
+      $("loginEmail").value=email;
+    }
+  }catch(e){
+    const msg=(e.message||"").toLowerCase();
+    toast(msg.includes("already")?"האימייל כבר רשום במערכת":("שגיאת הרשמה: "+e.message));
+  }finally{
+    $("registerBtn").disabled=false; $("registerBtn").textContent="יצירת חשבון";
+  }
 };
 document.querySelectorAll(".nav-item").forEach(n=>n.onclick=()=>showView(n.dataset.view));
 $("menuBtn").onclick=()=>openPanel("drawer");
@@ -540,7 +734,21 @@ $("managePlanBtn").onclick=()=>toast("מסך תשלום יחובר לספק סל
 $("logoutBtn").onclick=logout;
 
 
-if(state.user) login(state.user);
+(async()=>{
+  try{
+    const session=await getServerSession();
+    if(session){
+      state.serverSession=session;
+      const profile=await fetchServerProfile(session.user.id).catch(()=>null);
+      login({name:profile?.full_name || session.user.user_metadata?.full_name || session.user.email?.split("@")[0] || "משתמש",email:session.user.email||""});
+      await syncFromServer();
+    }else{
+      safeRemove("safepark_user");
+    }
+  }catch(e){
+    console.warn("Supabase startup",e);
+  }
+})();
 
 </script>
 </body>
